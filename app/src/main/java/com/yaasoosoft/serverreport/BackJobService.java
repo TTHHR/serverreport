@@ -24,12 +24,19 @@ public class BackJobService extends JobService {
         threadRun=true;
         new Thread(()->{
             String ip=NetworkUtils.getIPV4V6Address();
-            if(!ip.equals(lastIp))
+            if(!ip.equals(""))
             {
-                lastIp=ip;
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.EventType.TYPE_IP_CHANGE,lastIp));
-                NetworkUtils.postIPV4V6Address(lastIp);
+                if(!ip.equals(lastIp))
+                {
+                    lastIp=ip;
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.EventType.TYPE_IP_CHANGE,lastIp));
+                    NetworkUtils.postIPV4V6Address(lastIp);
+                }
+            }else
+            {
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.EventType.TYPE_NET_ERROR,"获取IP异常"));
             }
+
             threadRun=false;
         }).start();
 

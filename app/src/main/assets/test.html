@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>ServerReport</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+
+<div class="layui-container">
+  <div class="layui-progress" style="margin: 15px 0 30px;">
+    <div class="layui-progress-bar" lay-percent="100%"></div>
+  </div>
+
+  <blockquote class="layui-elem-quote" style="margin-top: 30px;">
+    <div class="layui-text">
+      <ul>
+        <li>当前设备IP：<span id="ipAddress"></span></li>
+      </ul>
+    </div>
+  </blockquote>
+</div>
+
+<!-- body 末尾处引入 layui -->
+<script src="layui/layui.js"></script>
+<script>
+layui.use(function(){
+  var layer = layui.layer;
+  var form = layui.form;
+  var laydate = layui.laydate;
+  var util = layui.util;
+  
+  // 欢迎信息
+  layer.msg('Hello World', {icon: 6});
+
+  lay('#ipAddress').html("127.0.0.1");
+
+});
+function setIpInfo(message) {
+    lay('#ipAddress').html(message);
+}
+</script>
+</body>
+</html>

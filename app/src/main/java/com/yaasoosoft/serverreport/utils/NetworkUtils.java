@@ -19,16 +19,16 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class NetworkUtils {
-    private static final String TAG ="NetworkUtils" ;
+    private static final String TAG = "NetworkUtils";
     static String ipurl = "http://v4v6.ipv6-test.com/api/myip.php";
-    static String postUrl="https://dxkite.cn/static/tthhr/myip.php";
-    public static String getIPV4V6Address()
-    {
-    OkHttpClient client = new OkHttpClient();
+    static String postUrl = "https://dxkite.cn/static/tthhr/myip.php";
 
-    Request request = new Request.Builder()
-            .url(ipurl)
-            .build();
+    public static String getIPV4V6Address() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(ipurl)
+                .build();
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
@@ -40,10 +40,10 @@ public class NetworkUtils {
             e.printStackTrace();
         }
         return "";
-}
-    public static void postIPV4V6Address(String address)
-    {
-// Create a trust manager that trusts all certificates
+    }
+
+    public static boolean postIPV4V6Address(String address) {
+        boolean ret = false;
         TrustManager[] trustAllCertificates = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
@@ -87,13 +87,14 @@ public class NetworkUtils {
 
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
-                Log.i(TAG,"Response: " + responseBody);
+                ret = true;
+                Log.i(TAG, "Response: " + responseBody);
             } else {
-                Log.w(TAG,"Request failed: " + response.message());
+                Log.w(TAG, "Request failed: " + response.message());
             }
         } catch (Exception e) {
-            Log.e(TAG,"Request Exception: " +e);
+            Log.e(TAG, "Request Exception: " + e);
         }
-
+        return ret;
     }
 }

@@ -3,6 +3,7 @@ package com.yaasoosoft.serverreport.entity;
 public class MessageEvent {
     public enum EventType {
         TYPE_IP_CHANGE,
+        TYPE_NET_ERROR,
         // Add more event types here
     }
 
