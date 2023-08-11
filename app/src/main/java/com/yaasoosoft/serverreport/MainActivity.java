@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         // 设置WebChromeClient以支持JavaScript的弹出窗口等
         webView.setWebChromeClient(new WebChromeClient());
     }
+    @Override
+    public void onBackPressed() {
+        // 禁用返回键，不执行任何操作
+    }
     private void setIpInfo(String message) {
         Log.i(TAG,"setIpInfo "+message);
         if(webView!=null)
