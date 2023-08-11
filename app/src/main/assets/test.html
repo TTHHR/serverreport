@@ -18,13 +18,64 @@
       <ul>
         <li>当前设备IP：<span id="ipAddress"></span></li>
       </ul>
+      <ul>
+        <li>当前设备APPS：<span id="apps"></span></li>
+      </ul>
     </div>
   </blockquote>
+  <!-- 添加一个按钮 -->
+  <button id="installApps" class="layui-btn" onclick="popupApps()">应用抽屉</button>
 </div>
+<!-- 弹窗内容的模板 -->
+<script type="text/html" id="popupTpl">
+  <div class="popup-text-container">
+    {{# layui.each(d.items, function(index, item){ }}
+    <div class="popup-text" data-values="{{ JSON.stringify(item.values) }}">{{ item.label }}</div>
+    {{# if((index + 1) % 5 === 0) { }}
+    <div class="clearfix"></div>
+    {{# } }}
+    {{# }); }}
+  </div>
+</script>
 
+<!-- 弹窗的容器 -->
+<div id="popupContainer" style="display: none;"></div>
 <!-- body 末尾处引入 layui -->
 <script src="layui/layui.js"></script>
+
 <script>
+var appsInfo='AAA:BBB;CCC:DDD;EEE:FFF;GGG:HHH;III:JJJ;';
+function popupApps(){
+        var layer = layui.layer;
+        var laytpl = layui.laytpl;
+        console.log("apps",appsInfo);
+ // 解析数据
+        var items = appsInfo.split(';').filter(function(item) {
+            return item.trim() !== '';
+        }).map(function(item) {
+            var parts = item.split(':');
+            return { label: parts[0], values: parts[1] };
+        });
+       // 渲染弹窗内容
+            var popupTpl = document.getElementById('popupTpl').innerHTML;
+            laytpl(popupTpl).render({ items: items }, function(html){
+                // 显示弹窗
+                layer.open({
+                    title: 'Popup Example',
+                    content: '<div style="padding: 20px;">' + html + '</div>',
+                    area: 'auto',
+                    success: function(layero, index){
+                        // 弹窗内文本点击事件
+                        layero.find('.popup-text').on('click', function(){
+                            var values = JSON.parse(this.getAttribute('data-values'));
+                            layer.msg('启动: ' + values);
+                            Android.launchApp(values);
+                        });
+                    }
+                });
+            });
+}
+
 layui.use(function(){
   var layer = layui.layer;
   var form = layui.form;
@@ -40,6 +91,25 @@ layui.use(function(){
 function setIpInfo(message) {
     lay('#ipAddress').html(message);
 }
+function setAppsInfo(message) {
+    appsInfo=message;
+}
 </script>
+<style>
+    .popup-text-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .popup-text {
+        width: 20%;
+        box-sizing: border-box;
+        padding: 5px;
+        cursor: pointer;
+        text-align: center;
+    }
+    .clearfix {
+        clear: both;
+    }
+</style>
 </body>
 </html>

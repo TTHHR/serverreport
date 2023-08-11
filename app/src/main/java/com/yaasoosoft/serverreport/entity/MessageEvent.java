@@ -4,6 +4,7 @@ public class MessageEvent {
     public enum EventType {
         TYPE_IP_CHANGE,
         TYPE_NET_ERROR,
+        TYPE_APPS_INFO,
         // Add more event types here
     }
 

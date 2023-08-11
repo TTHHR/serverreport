@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 允许JavaScript执行
         webSettings.setJavaScriptEnabled(true);
-
+        // 将 Java 类添加到 WebView
+        webView.addJavascriptInterface(new WebAppInterface(this), "Android");
         // 加载assets目录下的HTML文件
         webView.loadUrl("file:///android_asset/test.html");
         // 设置WebViewClient以确保网页在WebView中打开
@@ -74,6 +75,15 @@ public class MainActivity extends AppCompatActivity {
             webView.loadUrl("javascript:setIpInfo('"+message+"');");
         }
     }
+
+    private void setAppsInfo(String message) {
+        Log.i(TAG,"setAppsInfo "+message);
+        if(webView!=null)
+        {
+            // 调用 WebView 中的 JavaScript 函数
+            webView.loadUrl("javascript:setAppsInfo('"+message+"');");
+        }
+    }
     private void scheduleJob() {
         ComponentName componentName = new ComponentName(this, BackJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(1, componentName);
@@ -88,13 +98,18 @@ public class MainActivity extends AppCompatActivity {
     public void onMessageEvent(MessageEvent event) {
         MessageEvent.EventType type=event.getEventType();
         String message = event.getMessage();
-        if(type== MessageEvent.EventType.TYPE_IP_CHANGE)
+        Log.d(TAG,"event "+type);
+        switch (type)
         {
-            Log.d(TAG,"ipchange event");
-            setIpInfo(message);
-        } else if (type== MessageEvent.EventType.TYPE_NET_ERROR) {
-            Log.d(TAG,"net error event");
-            setIpInfo(message);
+            case TYPE_APPS_INFO:
+                setAppsInfo(message);
+                break;
+            case TYPE_IP_CHANGE:
+                setIpInfo(message);break;
+            case TYPE_NET_ERROR:
+                setIpInfo(message);break;
+            default:break;
         }
     }
+
 }
